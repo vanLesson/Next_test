@@ -1,0 +1,22 @@
+
+.backGround{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position-y: 10vh;
+    background-image: url("/images/png/stars.png");
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: 0;
+}
+@media (min-width: 768px) { /* Tablet */
+    .backGround{
+        background-repeat: repeat
+    }
+}
+
+@media (min-width: 1024px) { /* Desktop */
+    .backGround{
+        background-repeat: repeat
+    }
+}

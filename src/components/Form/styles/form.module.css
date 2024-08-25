@@ -1,0 +1,34 @@
+.wrapper{
+   display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 138px;
+    gap:20px;
+    z-index: 1;
+
+}
+.title{
+    color:#4A4E71
+}
+.messages{
+    width: 280px;
+    gap:4px;
+}
+.messages p{
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+
+.default {
+    color:#4A4E71
+
+}
+.succeed{
+    color:#27B274;
+}
+.error{
+    color: #ED5F59;
+}
