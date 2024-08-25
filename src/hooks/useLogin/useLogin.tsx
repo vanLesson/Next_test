@@ -24,7 +24,7 @@ export default function useLogin(): IUseLogin {
   const onChangePassword = e => {
     const value = e.target.value;
     const hasOneDigit = /\d/.test(value);
-    const isValidLength = /^.{9,}$/.test(value) && !/\s/.test(value);
+    const isValidLength = /^.{8,64}$/.test(value) && !/\s/.test(value);
     setFields(prevState => ({
       ...prevState,
       pass: value,
