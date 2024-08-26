@@ -58,9 +58,14 @@ describe('useLogin Hook', () => {
 
   it('should return correct validation class', () => {
     const { result } = renderHook(() => useLogin());
-
+    result.current.fields.initialFocus.pass = true;
     expect(result.current.getValidationClass(true)).toBe('succeed');
     expect(result.current.getValidationClass(false)).toBe('error');
+  });
+  it('should return correct validation class if focussed', () => {
+    const { result } = renderHook(() => useLogin());
+    result.current.fields.initialFocus.pass = false;
+    expect(result.current.getValidationClass(true)).toBe('succeed');
     expect(result.current.getValidationClass(null)).toBe('default');
   });
 
@@ -84,7 +89,7 @@ describe('useLogin Hook', () => {
       result.current.onSubmit();
     });
     await waitFor(() => {
-      expect(result.current.getPassFieldClass()).toBe('succeed');
+      expect(result.current.getPassFieldClass()).toBe('default');
     });
   });
 });

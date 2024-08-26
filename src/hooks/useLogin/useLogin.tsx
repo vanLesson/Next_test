@@ -13,6 +13,7 @@ export default function useLogin(): IUseLogin {
       oneDigit: null,
     },
     focused: { email: false, pass: false },
+    initialFocus: { email: false, pass: false },
     isEmailValid: null,
     submitted: false,
   });
@@ -25,11 +26,13 @@ export default function useLogin(): IUseLogin {
     const value = e.target.value;
     const hasOneDigit = /\d/.test(value);
     const isValidLength = /^.{8,64}$/.test(value) && !/\s/.test(value);
+    const isUppercase = /[A-Z]/.test(value);
+
     setFields(prevState => ({
       ...prevState,
       pass: value,
       passErrorSchema: {
-        ...prevState.passErrorSchema,
+        uppercase: isUppercase,
         length: isValidLength,
         oneDigit: hasOneDigit,
       },
@@ -37,16 +40,11 @@ export default function useLogin(): IUseLogin {
   };
 
   const onSubmit = () => {
-    const isUppercase = /[A-Z]/.test(fields.pass);
     const isValid = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{1,100}$').test(
       fields.email,
     );
     setFields(prevState => ({
       ...prevState,
-      passErrorSchema: {
-        ...prevState.passErrorSchema,
-        uppercase: isUppercase,
-      },
       submitted: true,
       isEmailValid: isValid,
     }));
@@ -57,33 +55,38 @@ export default function useLogin(): IUseLogin {
       setFields(prevState => ({
         ...prevState,
         focused: { ...prevState.focused, [field]: value },
+        ...(!value ? { initialFocus: { ...prevState.initialFocus, [field]: true } } : {}),
       }));
   };
 
   const onChangeEmail = e => {
     const value = e.target.value;
+    const isValid = new RegExp('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{0,100}$').test(
+      fields.email,
+    );
     setFields(prevState => ({
       ...prevState,
       email: value,
+      ...(prevState.initialFocus.email ? { isEmailValid: isValid } : {}),
     }));
   };
 
   const getValidationClass = validationState => {
-    if (validationState === null) {
+    if (validationState === null && !fields.initialFocus.pass) {
       return MessagesState.DEFAULT;
     } else if (validationState) {
       return MessagesState.SUCCEED;
-    } else {
+    } else if (!validationState && fields.initialFocus.pass) {
       return MessagesState.ERROR;
     }
   };
 
   const getEmailFieldClass = () => {
-    if (fields.isEmailValid && fields.submitted) {
+    if (fields.isEmailValid && fields.initialFocus.email) {
       return InputState.SUCCEED;
     }
 
-    if (!fields.isEmailValid && fields.submitted) {
+    if (!fields.isEmailValid && fields.initialFocus.email) {
       return InputState.ERROR;
     }
     if (fields.focused.email) {
@@ -99,7 +102,7 @@ export default function useLogin(): IUseLogin {
       fields.passErrorSchema.length &&
       fields.passErrorSchema.oneDigit &&
       fields.passErrorSchema.uppercase &&
-      fields.submitted
+      fields.initialFocus.pass
     ) {
       return InputState.SUCCEED;
     }
@@ -107,7 +110,7 @@ export default function useLogin(): IUseLogin {
       (!fields.passErrorSchema.length ||
         !fields.passErrorSchema.oneDigit ||
         !fields.passErrorSchema.uppercase) &&
-      fields.submitted
+      fields.initialFocus.pass
     ) {
       return InputState.ERROR;
     }

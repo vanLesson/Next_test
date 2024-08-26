@@ -9,6 +9,7 @@ export interface IFields {
     oneDigit: boolean | null;
   };
   focused: { email: boolean; pass: boolean };
+  initialFocus: { email: boolean; pass: boolean };
   isEmailValid: boolean | null;
   submitted: boolean;
 }
